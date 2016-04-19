@@ -2,16 +2,18 @@
 <job id="ka-import" xmlns="http://xmlns.jcp.org/xml/ns/javaee"
 	version="1.0">
 	<step id="importCsvFile">
-		<reader ref="kaCsvFileReader">
-			<properties>
-				<property name="inputCsvFile" value="#{jobParameters['inputCsvFile']}" />
-			</properties>
-		</reader>
-		<processor ref="" />
-		<writer ref="kaReportFileWriter">
-			<properties>
-				<property name="outputReportFile" value="#{jobParameters['outputReportFile']}" />
-			</properties>		
-		</writer>
+		<chunk checkpoint-policy="item" item-count="50" buffer-items="true">
+			<reader ref="kaCsvFileReader">
+				<properties>
+					<property name="inputCsvFile" value="#{jobParameters['inputCsvFile']}" />
+				</properties>
+			</reader>
+			<processor ref="kaRecordChecker" />
+			<writer ref="kaReportFileWriter">
+				<properties>
+					<property name="outputReportFile" value="#{jobParameters['outputReportFile']}" />
+				</properties>
+			</writer>
+		</chunk>
 	</step>
 </job>

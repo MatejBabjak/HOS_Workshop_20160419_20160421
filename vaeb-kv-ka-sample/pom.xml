@@ -21,7 +21,7 @@
 				<groupId>org.drools</groupId>
 				<artifactId>drools-bom</artifactId>
 				<type>pom</type>
-				<version>6.4.0.Final</version>
+				<version>6.3.0.Final</version>
 				<scope>import</scope>
 			</dependency>
 		</dependencies>
@@ -111,6 +111,17 @@
 				<version>2.6</version>
 				<configuration>
 					<failOnMissingWebXml>false</failOnMissingWebXml>
+					<webResources>
+						<resource>
+							<directory>src/main/resources</directory>
+							<includes>
+								<include>META-INF/kmodule.xml</include>
+								<!-- include>rules/validation.dsl</include>
+								<include>rules/validation.dslr</include-->
+							</includes>
+							<targetPath>.</targetPath>
+						</resource>
+					</webResources>
 				</configuration>
 			</plugin>
 			<plugin>
