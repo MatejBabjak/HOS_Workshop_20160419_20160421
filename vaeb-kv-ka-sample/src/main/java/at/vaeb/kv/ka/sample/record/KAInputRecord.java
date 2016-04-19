@@ -1,6 +1,7 @@
 package at.vaeb.kv.ka.sample.record;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
@@ -12,6 +13,7 @@ import org.beanio.annotation.Record;
 
 @Record
 public class KAInputRecord {
+	
 	@Field(at=0, length=8, format="ddMMyyyy")
 	private Date datumVon;
 	
@@ -33,6 +35,7 @@ public class KAInputRecord {
 		builder.append("KAInputRecord(");
 		builder.append("datumVon = ").append(datumVon).append(", ");
 		builder.append("datumBis = ").append(datumBis).append(", ");
+		builder.append("aufenthaltsdauer = ").append(getAufenthaltsdauer()).append(", ");
 		builder.append("vorname = '").append(vorname).append("', ");
 		builder.append("nachname = '").append(nachname).append("', ");
 		builder.append("diagnoseIcdCode = '").append(diagnoseIcdCode).append("'");
@@ -47,7 +50,7 @@ public class KAInputRecord {
 	}
 	
 	public LocalDate getDatumBis() {
-		return datumVon != null ? datumVon.toInstant().atZone(ZoneId.systemDefault()).toLocalDate() : null;
+		return datumBis != null ? datumBis.toInstant().atZone(ZoneId.systemDefault()).toLocalDate() : null;
 	}	
 	
 	public long getAufenthaltsdauer() {

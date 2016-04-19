@@ -28,6 +28,14 @@ rule "Person muss einen Nachnamen haben"
 		Fehler Der Spitalsaufenthalt beinhaltet keinen Nachnamen
 end
 
+rule "Spitalsaufenthalt muss ein Datum von beinhalten"
+	when
+		Der Spitalsaufenthalt
+		- beinhaltet kein Datum von
+	then
+		Fehler Der Spitalsaufenthalt beinhaltet kein Datum von
+end
+
 rule "Der Nachname muss mindestens 5 Zeichen lang sein"
 	when
 		Der Spitalsaufenthalt
