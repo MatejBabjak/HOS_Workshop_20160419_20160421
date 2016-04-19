@@ -47,4 +47,16 @@ public class ValidationResultCollector {
 		
 		return builder.toString();
 	}
+	
+	public KAInputRecord getValidatedRecord() {
+		return validatedRecord;
+	}
+	
+	public List<String> getErrors() {
+		return errors;
+	}
+	
+	public List<String> getWarnings() {
+		return warnings;
+	}
 }

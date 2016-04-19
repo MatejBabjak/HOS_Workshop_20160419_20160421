@@ -49,7 +49,7 @@ rule "Der Aufenthalt darf maximal 30 Tage dauern"
 		Der Spitalsaufenthalt
 		- laenger als 30 Tage ist
 	then
-		Warnung Der Spitalsaufenthalt darf maximal 30 Tage dauern
+		Warnung Der Spitalsaufenthalt soll maximal 30 Tage dauern
 end
 
 rule "Die Diagnose ist kein gueltiger ICD10 Code"
