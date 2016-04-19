@@ -24,6 +24,9 @@ public class KAReportFileWriter extends AbstractItemWriter {
 
 	private static Logger log = LoggerFactory.getLogger(KAReportFileWriter.class);
 	
+	private static final String CSS_HEAD = "<head><style>th {font-weight: bold; background: yellow;}</style></head>";
+	private static final String TABLE_HEADER = "<table border=\"1\"><tr class=\"tableHead\"><th>Datum von</th><th>Datum bis</th><th>Vorname</th><th>Nachname</th><th>Diagnose</th><th>Fehler</th><th>Warnung</th></tr>";
+	
 	private BufferedWriter writer = null;
 	
 	@Inject
@@ -40,7 +43,8 @@ public class KAReportFileWriter extends AbstractItemWriter {
 		writer = new BufferedWriter(new FileWriter(outputFile));
 		
 		//write the header
-		writer.append("<table border=\"1\"><tr><td>Datum von</td><td>Datum bis</td><td>Vorname</td><td>Nachname</td><td>Diagnose</td><td>Fehler</td><td>Warnung</td></tr>");
+		writer.append(CSS_HEAD);
+		writer.append(TABLE_HEADER);
 	}
 	
 	@Override
