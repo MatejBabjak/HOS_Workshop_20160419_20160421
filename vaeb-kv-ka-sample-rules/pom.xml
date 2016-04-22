@@ -2,9 +2,8 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>at.vaeb.kv</groupId>
-	<artifactId>vaeb-kv-ka-sample</artifactId>
+	<artifactId>vaeb-kv-ka-sample-rules</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
 
 	<dependencyManagement>
 		<dependencies>
@@ -105,27 +104,6 @@
 					<source>1.8</source>
 					<target>1.8</target>
 				</configuration>
-			</plugin>
-			<plugin>
-				<artifactId>maven-war-plugin</artifactId>
-				<version>2.6</version>
-				<configuration>
-					<failOnMissingWebXml>false</failOnMissingWebXml>
-					<webResources>
-						<resource>
-							<directory>src/main/resources</directory>
-							<includes>
-								<include>META-INF/kmodule.xml</include>
-							</includes>
-							<targetPath>.</targetPath>
-						</resource>
-					</webResources>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.wildfly.plugins</groupId>
-				<artifactId>wildfly-maven-plugin</artifactId>
-				<version>1.0.2.Final</version>
 			</plugin>
 		</plugins>
 	</build>

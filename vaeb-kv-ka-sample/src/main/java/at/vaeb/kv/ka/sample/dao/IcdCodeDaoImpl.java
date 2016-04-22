@@ -16,10 +16,6 @@ public class IcdCodeDaoImpl implements IcdCodeDao {
 
 	@PersistenceContext(unitName = "VAEB_KV")
 	private EntityManager em;
-
-	public IcdCodeDaoImpl() {
-		super();
-	}
 	
 	@Override
 	public boolean existsIcd10Code(String icd10Code) {
