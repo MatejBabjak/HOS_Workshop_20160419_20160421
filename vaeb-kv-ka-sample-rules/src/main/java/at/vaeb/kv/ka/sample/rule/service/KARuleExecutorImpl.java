@@ -2,10 +2,8 @@ package at.vaeb.kv.ka.sample.rule.service;
 
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.kie.api.KieServices;
@@ -29,11 +27,9 @@ import at.vaeb.kv.ka.sample.record.ValidationResultCollector;
 @Named("kaRuleExecutor")
 public class KARuleExecutorImpl implements KARuleExecutor {
 
-	@Inject
-	DslrRuleDao dslrRuleDao;
+	private DslrRuleDao dslrRuleDao;
 	
-	@Inject
-	DslExpanderDao dslExpanderDao;
+	private DslExpanderDao dslExpanderDao;
 	
 	private String rulePackage;
 	
@@ -41,25 +37,21 @@ public class KARuleExecutorImpl implements KARuleExecutor {
 	
 	private static Logger log = LoggerFactory.getLogger(KARuleExecutorImpl.class);
 	
-	@PostConstruct
-	public void init() {
-		//get the package name from the annotation
-		RuleExecutor annotation = this.getClass().getAnnotation(RuleExecutor.class);
-		if (annotation == null) {
-			throw new IllegalArgumentException("The rule executor has to be annotated with the 'RuleExecutor' annotation");
-		}
+	public KARuleExecutorImpl(String rulePackage, DslrRuleDao dslrRuleDao, DslExpanderDao dslExpanderDao) {
+		this.rulePackage = rulePackage;
+		this.dslrRuleDao = dslrRuleDao;
+		this.dslExpanderDao = dslExpanderDao;
 		
-		rulePackage = annotation.getRulePackage();
-		if (rulePackage == null) {
-			throw new IllegalArgumentException("The rule package has not been specified");
-		}
-		
+		initKieSession();	
+	}
+
+	private void initKieSession() {
 		log.info(String.format("Constructing a Drools runtime for the rule package '%s'", rulePackage));
 		
 		List<DslrRule> dslrRules = dslrRuleDao.getAllRulesInPackage(rulePackage);
 		List<DslExpander> dslExpanders = dslExpanderDao.getAllExpandersInPackage(rulePackage);
 		
-		log.info(String.format("%i DSLR rules and %i DSL expandes have been found in package '%s'", dslrRules.size(), dslExpanders.size(), rulePackage));
+		log.info(String.format("%d DSLR rules and %d DSL expandes have been found in package '%s'", dslrRules.size(), dslExpanders.size(), rulePackage));
 		
 		KieServices ks = KieServices.Factory.get();
 		KieRepository kr = ks.getRepository();
@@ -67,10 +59,12 @@ public class KARuleExecutorImpl implements KARuleExecutor {
 		
 		for (DslExpander expander: dslExpanders) {
 			kfs.write("src/main/resources/" + expander.getRulePackage().getPackageName() + "/" + expander.getExpanderName() + ".dsl", expander.getDefinition());
+			//log.info(expander.getDefinition());
 		}
 		
 		for (DslrRule rule: dslrRules) {
 			kfs.write("src/main/resources/" + rule.getRulePackage().getPackageName() + "/" + rule.getRuleName() + ".dslr", rule.getDefinition());
+			//log.info(rule.getDefinition());
 		}
 		
 		KieBuilder kb = ks.newKieBuilder(kfs);
@@ -82,8 +76,8 @@ public class KARuleExecutorImpl implements KARuleExecutor {
 
 		KieContainer kieContainer = ks.newKieContainer(kr.getDefaultReleaseId());
 		kieSession = kieContainer.newKieSession();
-		
-		//TODO: check, whether it would be better to keep the container and to open a new session for each check call
+				
+		//TODO: check, whether it would be better to keep the container and to open a new session for each check call			
 	}
 	
 	@PreDestroy
@@ -95,8 +89,14 @@ public class KARuleExecutorImpl implements KARuleExecutor {
 	
 	@Override
 	public ValidationResultCollector validate(KAInputRecord inputRecord) {
-		// TODO Auto-generated method stub
-		return null;
+		log.info("Validated object: " + inputRecord);
+		
+		kieSession.insert(inputRecord);
+		ValidationResultCollector validationResult = new ValidationResultCollector(inputRecord);
+		kieSession.setGlobal("validationResultCollector", validationResult);
+		kieSession.fireAllRules();
+		
+		return validationResult;
 	}
 
 }
